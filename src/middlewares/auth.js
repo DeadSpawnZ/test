@@ -34,6 +34,10 @@ const middlewares = {
             resp = { message: 'No autorizado' };
             res.status(403).json(resp);
         }
+    },
+    errorHandler: function(err, req, res, next) {
+        console.error(err.stack);
+        res.status(500).send('Something went wrong!');
     }
 };
 
