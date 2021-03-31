@@ -30,6 +30,17 @@ userService.validateUser = async (id_user) => {
     return await User.findOne({ _id: id });
 }
 
+userService.changeStatusUser = async (id_user, new_status) => {
+    try{
+        const user = await module.exports.validateUser(id_user);
+        user.status = new_status;
+        await user.save();
+        return true;
+    }catch(err){
+        return false;
+    }
+}
+
 userService.updateUser = async (id_user, data) => {
     try{
         const id = mongoose.Types.ObjectId(id_user);

@@ -75,7 +75,26 @@ userCtrlr.updateAdmin = async (req, res) => {
 }
 
 userCtrlr.deleteAdmin = async (req, res) => {
-    
+    let resp = { message: null };
+    let status = 400;
+    let id_admin = (req.params.id) ? req.params.id : '';
+    if(id_admin){
+        const admin = await userService.validateUser(id_admin);
+        if(admin){
+            const changed = await userService.changeStatusUser(id_admin, false);
+            if(changed){
+                status = 200;
+                resp = { message: 'Admin eliminado correctamente' };
+            }else{
+                resp = { message: 'Error al modificar admin' };
+            }
+        }else{
+            resp = { message: 'El usuario no existe' };
+        }
+    }else{
+        resp = { message: 'El id es un parametro necesario' };
+    }  
+    res.status(status).json(resp);
 }
 
 module.exports = userCtrlr;
