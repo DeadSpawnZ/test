@@ -25,4 +25,28 @@ userService.createUser = async (admin_item) => {
     }
 }
 
+userService.validateUser = async (id_user) => {
+    const id = mongoose.Types.ObjectId(id_user);
+    return await User.findOne({ _id: id });
+}
+
+userService.updateUser = async (id_user, data) => {
+    try{
+        const id = mongoose.Types.ObjectId(id_user);
+        const updates = {
+            email: data.email,
+            password: await User.encryptPassword(data.pass),
+            role: data.role
+        }
+        const result = await User.updateOne({ _id: id }, updates);
+        return (result.ok) ? true : false;
+    }catch(err){
+        return false;
+    }
+}
+
+userService.getAdmins = async () => {
+    return await User.find({ status: true }, "email -_id");
+}
+
 module.exports = userService;
